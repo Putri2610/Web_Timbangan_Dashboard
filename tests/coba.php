@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Monitoring Timbangan - MetaHome Style</title>
+    <title>Dashboard Monitoring Timbangan</title>
     
     <!-- Google Fonts & Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,7 +13,7 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #ebf0f5; /* Warna background soft blue-grey sesuai contoh */
+            background-color: #ebf0f5;
             overflow-x: hidden;
         }
         
@@ -24,7 +24,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            background-color: #234275; /* Biru gelap khas contoh dashboard */
+            background-color: #234275;
             padding: 24px;
             color: #b9cbe3;
             z-index: 100;
@@ -56,7 +56,7 @@
             transition: all 0.3s ease;
         }
         .sidebar-item.active a, .sidebar-item a:hover {
-            background-color: #335994; /* Warna highlight menu aktif */
+            background-color: #335994;
             color: #ffffff;
         }
 
@@ -83,8 +83,8 @@
         .card-modern {
             background: #ffffff;
             border: none;
-            border-radius: 20px; /* Lengkungan sudut halus */
-            box-shadow: 0 10px 25px rgba(163, 178, 199, 0.25); /* Shadow lembut kebiruan */
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(163, 178, 199, 0.25);
             padding: 24px;
             margin-bottom: 24px;
         }
@@ -281,7 +281,6 @@
                 </table>
             </div>
         </div>
-
     </div>
 
     <!-- Bootstrap 5 JS Bundle -->
