@@ -10,136 +10,252 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #ebf0f5;
-            overflow-x: hidden;
-        }
-        
-        /* Layout Sidebar */
-        .sidebar {
-            width: 260px;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #234275;
-            padding: 24px;
-            color: #b9cbe3;
-            z-index: 100;
-        }
-        .sidebar .brand {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 40px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .sidebar-item a {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 16px;
-            color: #b9cbe3;
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: 500;
-            margin-bottom: 8px;
-            transition: all 0.3s ease;
-        }
-        .sidebar-item.active a, .sidebar-item a:hover {
-            background-color: #335994;
-            color: #ffffff;
-        }
+<style>
+    body{
+    font-family:'Plus Jakarta Sans',sans-serif;
+    background:#eef3f8;
+    overflow-x:hidden;}
+    
+    /* =====================
+            SIDEBAR
+    ====================== */
+    .sidebar{
+        position:fixed;
+        left:0;
+        top:0;
+        width:220px;
+        height:100vh;
+        background:#234275;
+        color:#fff;
+        padding:20px;
+    }
 
-        /* Main Content Wrapper */
-        .main-content {
-            margin-left: 260px;
-            padding: 20px 40px;
-            min-height: 100vh;
-        }
+    .brand{
+        font-size:24px;
+        font-weight:700;
+        margin-bottom:35px;
+        line-height:32px;
+    }
 
-        /* Top Bar Header */
-        .top-bar {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 14px 28px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            margin-bottom: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .sidebar-menu{
+        list-style:none;
+        padding:0;
+    }
 
-        /* Cards Style ala Dashboard Referensi */
-        .card-modern {
-            background: #ffffff;
-            border: none;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(163, 178, 199, 0.25);
-            padding: 24px;
-            margin-bottom: 24px;
-        }
+    .sidebar-item{
+        margin-bottom:8px;
+    }
 
-        /* Status Badge */
-        .status-online {
-            background-color: #e6f9f0;
-            color: #10b981;
-            font-weight: 600;
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .status-offline {
-            background-color: #fee2e2;
-            color: #ef4444;
-            font-weight: 600;
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
+    .sidebar-item a{
+        display:block;
+        padding:12px 18px;
+        color:#cfd9ea;
+        text-decoration:none;
+        border-radius:10px;
+        transition:.3s;
+        font-size:15px;
+    }
 
-        /* Table Styling */
-        .table-modern th {
-            background-color: transparent;
-            color: #8fa0b5;
-            font-weight: 600;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-bottom: 2px solid #edf2f7;
-            padding-bottom: 16px;
-        }
-        .table-modern td {
-            padding: 20px 0;
-            border-bottom: 1px solid #f1f5f9;
-            color: #4a5568;
-            font-weight: 500;
-        }
-        
-        .ip-code {
-            background-color: #f0f4f9;
-            padding: 4px 10px;
-            border-radius: 8px;
-            color: #2563eb;
-            font-family: monospace;
-            font-weight: 600;
-        }
-    </style>
+    .sidebar-item.active a,
+    .sidebar-item a:hover{
+        background:#335994;
+        color:#fff;
+    }
+
+
+    /* ======================
+            CONTENT
+    ====================== */
+
+    .main-content{
+        margin-left:220px;
+        padding:15px 20px;
+    }
+
+    /* ======================
+            TOPBAR
+    ====================== */
+
+    .top-bar{
+        background:#fff;
+        border-radius:14px;
+        padding:12px 20px;
+        margin-bottom:18px;
+        box-shadow:0 3px 10px rgba(0,0,0,.05);
+    }
+
+    /* ======================
+            SUMMARY CARD
+    ====================== */
+
+    .summary-card{
+        background:#fff;
+        border-radius:15px;
+        padding:18px;
+        box-shadow:0 5px 18px rgba(0,0,0,.05);
+    }
+
+    .summary-card h3{
+        font-size:30px;
+        font-weight:700;
+        margin:0;
+    }
+
+    .summary-card small{
+        color:#7b8794;
+    }
+
+    /* ======================
+            MAIN CARD
+    ====================== */
+
+.card-modern{
+    background:#fff;
+    border:none;
+    border-radius:16px;
+    padding:20px;
+    box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+
+
+/* ======================
+        BUTTON
+====================== */
+
+.btn-xml{
+    background:#234275;
+    color:white;
+    border:none;
+    padding:9px 20px;
+    border-radius:10px;
+    font-weight:600;
+}
+
+.btn-xml:hover{
+    background:#1c3560;
+}
+
+
+/* ======================
+        TABLE
+====================== */
+
+.table-modern{
+    width:100%;
+    margin-top:10px;
+}
+
+.table-modern thead th{
+    background:#f7f9fc;
+    color:#6b7280;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    padding:14px;
+    border:none;
+}
+
+.table-modern tbody td{
+    padding:16px 14px;
+    vertical-align:middle;
+    border-bottom:1px solid #eef2f7;
+    font-size:14px;
+}
+
+.table-modern tbody tr:hover{
+    background:#f8fbff;
+}
+
+
+/* ======================
+        BADGE
+====================== */
+
+.badge-local{
+    background:#dbeafe;
+    color:#2563eb;
+    border-radius:8px;
+    padding:6px 12px;
+    font-size:13px;
+}
+
+.badge-internet{
+    background:#fef3c7;
+    color:#b45309;
+    border-radius:8px;
+    padding:6px 12px;
+    font-size:13px;
+}
+
+
+/* ======================
+        STATUS
+====================== */
+
+.flag-online{
+    color:#22c55e;
+    font-size:20px;
+}
+
+.flag-offline{
+    color:#ef4444;
+    font-size:20px;
+}
+
+
+/* ======================
+        IP
+====================== */
+
+.ip-code{
+    background:#f4f6fb;
+    padding:6px 12px;
+    border-radius:8px;
+    font-family:monospace;
+    font-size:13px;
+}
+
+
+/* ======================
+        TITLE
+====================== */
+
+.title-page{
+    font-size:26px;
+    font-weight:700;
+}
+
+.sub-title{
+    color:#6b7280;
+    margin-bottom:0;
+}
+
+
+/* ======================
+        RESPONSIVE
+====================== */
+
+@media(max-width:992px){
+
+.sidebar{
+    width:180px;
+}
+
+.main-content{
+    margin-left:180px;
+    padding:10px;
+}
+
+.summary-card h3{
+    font-size:24px;
+}
+
+.table-modern td{
+    font-size:13px;
+}
+
+}
+</style>
 </head>
 <body>
 
