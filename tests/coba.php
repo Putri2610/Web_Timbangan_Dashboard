@@ -101,12 +101,18 @@
                         </td>
 
                         <td class="text-center">
-    @if($server->status_local)
-        <i class="bi bi-flag-fill text-success fs-5"></i>
-    @else
-        <i class="bi bi-flag-fill text-danger fs-5"></i>
-    @endif
-</td>
+
+                            @if($server['status']=="Online")
+
+                                <i class="bi bi-flag-fill text-success fs-5"></i>
+
+                            @else
+
+                                <i class="bi bi-flag-fill text-danger fs-5">
+
+                            @endif
+
+                        </td>
 
                         <td>
 
