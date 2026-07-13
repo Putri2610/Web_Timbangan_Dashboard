@@ -16,9 +16,7 @@
     background:#eef3f8;
     overflow-x:hidden;}
     
-    /* =====================
-            SIDEBAR
-    ====================== */
+    /* =====================SIDEBAR====================== */
     .sidebar{
         position:fixed;
         left:0;
@@ -63,19 +61,13 @@
     }
 
 
-    /* ======================
-            CONTENT
-    ====================== */
-
+    /* ======================CONTENT====================== */
     .main-content{
         margin-left:220px;
         padding:15px 20px;
     }
 
-    /* ======================
-            TOPBAR
-    ====================== */
-
+    /* ======================TOPBAR====================== */
     .top-bar{
         background:#fff;
         border-radius:14px;
@@ -84,10 +76,7 @@
         box-shadow:0 3px 10px rgba(0,0,0,.05);
     }
 
-    /* ======================
-            SUMMARY CARD
-    ====================== */
-
+    /* ======================SUMMARY CARD====================== */
     .summary-card{
         background:#fff;
         border-radius:15px;
@@ -105,156 +94,123 @@
         color:#7b8794;
     }
 
-    /* ======================
-            MAIN CARD
-    ====================== */
+    /* ======================MAIN CARD====================== */
+    .card-modern{
+        background:#fff;
+        border:none;
+        border-radius:16px;
+        padding:20px;
+        box-shadow:0 5px 18px rgba(0,0,0,.06);
+    }
 
-.card-modern{
-    background:#fff;
-    border:none;
-    border-radius:16px;
-    padding:20px;
-    box-shadow:0 5px 18px rgba(0,0,0,.06);
-}
+    /* ======================BUTTON====================== */
+    .btn-xml{
+        background:#234275;
+        color:white;
+        border:none;
+        padding:9px 20px;
+        border-radius:10px;
+        font-weight:600;
+    }
 
+    .btn-xml:hover{
+        background:#1c3560;
+    }
 
-/* ======================
-        BUTTON
-====================== */
+    /* ======================TABLE====================== */
+    .table-modern{
+        width:100%;
+        margin-top:10px;
+    }
 
-.btn-xml{
-    background:#234275;
-    color:white;
-    border:none;
-    padding:9px 20px;
-    border-radius:10px;
-    font-weight:600;
-}
+    .table-modern thead th{
+        background:#f7f9fc;
+        color:#6b7280;
+        font-size:13px;
+        text-transform:uppercase;
+        letter-spacing:.5px;
+        padding:14px;
+        border:none;
+    }
 
-.btn-xml:hover{
-    background:#1c3560;
-}
+    .table-modern tbody td{
+        padding:16px 14px;
+        vertical-align:middle;
+        border-bottom:1px solid #eef2f7;
+        font-size:14px;
+    }
 
-
-/* ======================
-        TABLE
-====================== */
-
-.table-modern{
-    width:100%;
-    margin-top:10px;
-}
-
-.table-modern thead th{
-    background:#f7f9fc;
-    color:#6b7280;
-    font-size:13px;
-    text-transform:uppercase;
-    letter-spacing:.5px;
-    padding:14px;
-    border:none;
-}
-
-.table-modern tbody td{
-    padding:16px 14px;
-    vertical-align:middle;
-    border-bottom:1px solid #eef2f7;
-    font-size:14px;
-}
-
-.table-modern tbody tr:hover{
-    background:#f8fbff;
-}
+    .table-modern tbody tr:hover{
+        background:#f8fbff;
+    }
 
 
-/* ======================
-        BADGE
-====================== */
+    /* ======================BADGE====================== */
+    .badge-local{
+        background:#dbeafe;
+        color:#2563eb;
+        border-radius:8px;
+        padding:6px 12px;
+        font-size:13px;
+    }
 
-.badge-local{
-    background:#dbeafe;
-    color:#2563eb;
-    border-radius:8px;
-    padding:6px 12px;
-    font-size:13px;
-}
+    .badge-internet{
+        background:#fef3c7;
+        color:#b45309;
+        border-radius:8px;
+        padding:6px 12px;
+        font-size:13px;
+    }
 
-.badge-internet{
-    background:#fef3c7;
-    color:#b45309;
-    border-radius:8px;
-    padding:6px 12px;
-    font-size:13px;
-}
+    /* ======================STATUS====================== */
+    .flag-online{
+        color:#22c55e;
+        font-size:20px;
+    }
 
+    .flag-offline{
+        color:#ef4444;
+        font-size:20px;
+    }
 
-/* ======================
-        STATUS
-====================== */
+    /* ======================IP====================== */
+    .ip-code{
+        background:#f4f6fb;
+        padding:6px 12px;
+        border-radius:8px;
+        font-family:monospace;
+        font-size:13px;
+    }
+    /* ======================TITLE====================== */
+    .title-page{
+        font-size:26px;
+        font-weight:700;
+    }
 
-.flag-online{
-    color:#22c55e;
-    font-size:20px;
-}
+    .sub-title{
+        color:#6b7280;
+        margin-bottom:0;
+    }
 
-.flag-offline{
-    color:#ef4444;
-    font-size:20px;
-}
+    /* ======================RESPONSIVE====================== */
+    @media(max-width:992px){
+    .sidebar{
+        width:180px;
+    }
 
+    .main-content{
+        margin-left:180px;
+        padding:10px;
+    }
 
-/* ======================
-        IP
-====================== */
+    .summary-card h3{
+        font-size:24px;
+    }
 
-.ip-code{
-    background:#f4f6fb;
-    padding:6px 12px;
-    border-radius:8px;
-    font-family:monospace;
-    font-size:13px;
-}
-
-
-/* ======================
-        TITLE
-====================== */
-
-.title-page{
-    font-size:26px;
-    font-weight:700;
-}
-
-.sub-title{
-    color:#6b7280;
-    margin-bottom:0;
-}
-
-
-/* ======================
-        RESPONSIVE
-====================== */
-
-@media(max-width:992px){
-
-.sidebar{
-    width:180px;
-}
-
-.main-content{
-    margin-left:180px;
-    padding:10px;
-}
-
-.summary-card h3{
-    font-size:24px;
-}
-
-.table-modern td{
-    font-size:13px;
-}
-
-}
+    .table-modern td{
+        font-size:13px;
+    }
+    }
 </style>
 </head>
 <body>
