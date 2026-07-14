@@ -24,7 +24,6 @@ class PksController extends Controller
         $request->validate([
             'nama_pks' => 'required'
         ]);
-
         Pks::create([
             'nama_pks' => $request->nama_pks
         ]);
