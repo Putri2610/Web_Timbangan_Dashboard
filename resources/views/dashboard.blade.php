@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Angka 180 artinya halaman akan refresh otomatis setiap 180 detik (3 menit) -->
+ <meta http-equiv="refresh" content="180">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Monitoring Timbangan - MetaHome Style</title>
@@ -280,5 +282,19 @@
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // Atur waktu tunggu di sini (dalam milidetik)
+    // 3 menit = 3 * 60 * 1000 = 180000 milidetik
+    const intervalWaktu = 180000; 
+
+    setInterval(function() {
+        // Cara A: Muat ulang halaman secara halus lewat browser
+        window.location.reload();
+        
+        // Cara B: Jika kamu punya fungsi AJAX khusus untuk memuat data log timbangan,
+        // kamu bisa panggil fungsi tersebut di sini agar dashboard tidak perlu berkedip reload.
+        // contoh: fungsiAmbilDataTimbangan();
+    }, intervalWaktu);
+</script>
 </body>
 </html>
