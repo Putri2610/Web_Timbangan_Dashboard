@@ -1,24 +1,36 @@
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
 use App\Http\Controllers\PingController;
 
-public function handle()
+class CheckServer extends Command
 {
-    $controller = new PingController();
+    protected $signature = 'server:check';
 
-    $adaPerubahan = $controller->checkServers();
+    protected $description = 'Check status server timbangan';
 
-    if($adaPerubahan){
+    public function handle()
+    {
+        $controller = new PingController();
 
-        $this->newLine();
-        $this->info("=========================");
-        $this->info("Terjadi Perubahan");
-        $this->info("XML siap digenerate");
-        $this->info("=========================");
+        $adaPerubahan = $controller->checkServer();
 
-    }else{
+        if($adaPerubahan){
 
-        $this->line("Tidak ada perubahan konfigurasi");
+            $this->newLine();
+            $this->info("==============================");
+            $this->info(" TERJADI PERUBAHAN");
+            $this->info(" XML SIAP DIGENERATE");
+            $this->info("==============================");
 
+        }else{
+
+            $this->line("Tidak ada perubahan konfigurasi.");
+
+        }
+
+        return Command::SUCCESS;
     }
-
-    return Command::SUCCESS;
 }
