@@ -1,0 +1,142 @@
+public function checkServers()
+{
+    $adaPerubahan = false;
+
+    $pkss = ServerConfig::select('kode_pks')
+        ->distinct()
+        ->get();
+
+    foreach ($pkss as $pks) {
+
+        $servers = ServerConfig::where('kode_pks', $pks->kode_pks)
+            ->orderBy('id')
+            ->get();
+
+        $serverAktif = null;
+
+        foreach ($servers as $server) {
+
+            // ========================
+            // Ping Local
+            // ========================
+            $output = [];
+            $status = 1;
+
+            exec("ping -n 1 ".$server->ip_local, $output, $status);
+
+            $hasil = implode(" ", $output);
+
+            $server->status_local =
+                $status == 0 &&
+                stripos($hasil,"Request timed out")===false &&
+                stripos($hasil,"Destination host unreachable")===false &&
+                stripos($hasil,"Destination net unreachable")===false &&
+                stripos($hasil,"General failure")===false;
+
+            // ========================
+            // Ping Internet
+            // ========================
+            $output = [];
+            $status = 1;
+
+            exec("ping -n 1 ".$server->ip_internet, $output, $status);
+
+            $hasil = implode(" ", $output);
+
+            $server->status_internet =
+                $status == 0 &&
+                stripos($hasil,"Request timed out")===false &&
+                stripos($hasil,"Destination host unreachable")===false &&
+                stripos($hasil,"Destination net unreachable")===false &&
+                stripos($hasil,"General failure")===false;
+
+            $server->save();
+
+            // PRIORITAS
+            if ($server->status_local) {
+
+                $serverAktif = [
+                    'kode_pks'=>$server->kode_pks,
+                    'nama_server'=>$server->nama_server,
+                    'jalur'=>'Local',
+                    'ip'=>$server->ip_local,
+                    'status'=>true
+                ];
+
+                break;
+            }
+
+            if ($server->status_internet) {
+
+                $serverAktif = [
+                    'kode_pks'=>$server->kode_pks,
+                    'nama_server'=>$server->nama_server,
+                    'jalur'=>'Internet',
+                    'ip'=>$server->ip_internet,
+                    'status'=>true
+                ];
+
+                break;
+            }
+        }
+
+        if(!$serverAktif){
+
+            $serverAktif = [
+                'kode_pks'=>$pks->kode_pks,
+                'nama_server'=>'Tidak ada server aktif',
+                'jalur'=>'-',
+                'ip'=>'-',
+                'status'=>false
+            ];
+        }
+
+        // =====================
+        // HISTORY
+        // =====================
+
+        $last = ServerHistory::where('kode_pks',$pks->kode_pks)
+            ->latest()
+            ->first();
+
+        if(
+            !$last ||
+            $last->nama_server != $serverAktif['nama_server'] ||
+            $last->jalur != $serverAktif['jalur'] ||
+            $last->ip != $serverAktif['ip'] ||
+            $last->status != $serverAktif['status']
+        ){
+
+            $adaPerubahan = true;
+
+            ServerHistory::create([
+                'kode_pks'=>$serverAktif['kode_pks'],
+                'nama_server'=>$serverAktif['nama_server'],
+                'jalur'=>$serverAktif['jalur'],
+                'ip'=>$serverAktif['ip'],
+                'status'=>$serverAktif['status'],
+                'xml_generated'=>false
+            ]);
+        }
+
+        CompareServerConfig::updateOrCreate(
+
+            [
+                'kode_pks'=>$pks->kode_pks
+            ],
+
+            [
+                'server_aktif'=>$serverAktif['nama_server'],
+                'jalur'=>$serverAktif['jalur'],
+                'ip'=>$serverAktif['ip'],
+                'status'=>$serverAktif['status'],
+                'last_checked'=>now(),
+                'xml_generated'=>false
+            ]
+
+        );
+
+    }
+
+    return $adaPerubahan;
+}
