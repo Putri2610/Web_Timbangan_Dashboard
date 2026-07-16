@@ -1,0 +1,24 @@
+use App\Http\Controllers\PingController;
+
+public function handle()
+{
+    $controller = new PingController();
+
+    $adaPerubahan = $controller->checkServers();
+
+    if($adaPerubahan){
+
+        $this->newLine();
+        $this->info("=========================");
+        $this->info("Terjadi Perubahan");
+        $this->info("XML siap digenerate");
+        $this->info("=========================");
+
+    }else{
+
+        $this->line("Tidak ada perubahan konfigurasi");
+
+    }
+
+    return Command::SUCCESS;
+}
