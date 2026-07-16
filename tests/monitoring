@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use App\Http\Controllers\PingController;
+
+class MonitoringStart extends Command
+{
+    protected $signature = 'monitoring:start';
+
+    protected $description = 'Monitoring Server Timbangan';
+
+    public function handle()
+    {
+        $controller = new PingController();
+
+        $this->info("==========================================");
+        $this->info(" MONITORING SERVER TIMBANGAN");
+        $this->info(" Tekan CTRL + C untuk berhenti");
+        $this->info("==========================================");
+
+        while (true) {
+
+            $this->newLine();
+
+            $this->line(now());
+
+            $perubahan = $controller->checkServers();
+
+            if ($perubahan) {
+
+                $this->warn("================================");
+                $this->warn(" TERJADI PERUBAHAN");
+                $this->warn(" XML SIAP DIGENERATE");
+                $this->warn("================================");
+
+            } else {
+
+                $this->info("Tidak ada perubahan.");
+
+            }
+
+            sleep(60);
+        }
+    }
+}
