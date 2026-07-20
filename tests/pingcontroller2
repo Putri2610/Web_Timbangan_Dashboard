@@ -1,0 +1,9 @@
+$serverAktif = CompareServerConfig::where('status', true)->count();
+
+$xmlPending = CompareServerConfig::where('xml_generated', false)->count();
+
+return view('ping', compact(
+    'aktifServers',
+    'serverAktif',
+    'xmlPending'
+));
