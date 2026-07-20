@@ -1,0 +1,34 @@
+public function generate()
+{
+    $servers = CompareServerConfig::where('xml_generated', false)->get();
+
+    if ($servers->isEmpty()) {
+        return "Tidak ada perubahan konfigurasi.";
+    }
+
+    $xml = new \SimpleXMLElement('<servers/>');
+
+    foreach ($servers as $server) {
+
+        $item = $xml->addChild('server');
+
+        $item->addChild('kode_pks', $server->kode_pks);
+        $item->addChild('server_aktif', $server->server_aktif);
+        $item->addChild('jalur', $server->jalur);
+        $item->addChild('ip', $server->ip);
+        $item->addChild('status', $server->status ? 'Online' : 'Offline');
+        $item->addChild('last_checked', $server->last_checked);
+
+    }
+
+    $path = storage_path('app/public/server_config.xml');
+
+    $xml->asXML($path);
+
+    foreach ($servers as $server) {
+        $server->xml_generated = true;
+        $server->save();
+    }
+
+    return response()->download($path);
+}
