@@ -1,0 +1,43 @@
+foreach ($servers as $server) {
+
+    $config = ServerConfig::where('kode_pks', $server->kode_pks)
+        ->where('nama_server', $server->server_aktif)
+        ->first();
+
+    $row = $dom->createElement('z:row');
+
+    $row->setAttribute('TRM_ID', $server->ip . ':' . ($config->port ?? 3306));
+
+    $row->setAttribute('TRM_USED', 1);
+
+    $row->setAttribute('TRM_CODE', $server->kode_pks);
+
+    $row->setAttribute('TRM_INIT', $server->server_aktif);
+
+    $row->setAttribute('TRM_DESC', $server->kode_pks);
+
+    $row->setAttribute('TRM_HOST', $server->ip);
+
+    $row->setAttribute('TRM_PORT', $config->port ?? 3306);
+
+    $row->setAttribute('TRM_DB', $config->database_name ?? '');
+
+    $row->setAttribute('TRM_USER', $config->username ?? '');
+
+    $row->setAttribute('TRM_PASS', $config->password ?? '');
+
+    // Online = 1, Offline = 0
+    $row->setAttribute('TRM_STS_PING', $server->status ? 1 : 0);
+
+    $row->setAttribute(
+        'TRM_LAST_CHECKED',
+        optional($server->last_checked)->format('Y-m-d\TH:i:s')
+    );
+
+    $row->setAttribute(
+        'TRM_LAST_UPDATED',
+        optional($server->last_updated)->format('Y-m-d\TH:i:s')
+    );
+
+    $insert->appendChild($row);
+}
