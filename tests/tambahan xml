@@ -1,0 +1,36 @@
+private static function addAttribute($dom, $elementType, $name, $type, $maxLength)
+{
+    $attribute = $dom->createElement('s:AttributeType');
+    $attribute->setAttribute('name', $name);
+    $attribute->setAttribute('rs:number', '1');
+    $attribute->setAttribute('rs:nullable', 'true');
+    $attribute->setAttribute('rs:write', 'true');
+
+    $datatype = $dom->createElement('s:datatype');
+    $datatype->setAttribute('dt:type', $type);
+
+    if ($type == 'string') {
+        $datatype->setAttribute('rs:dbtype', 'str');
+    }
+
+    $datatype->setAttribute('dt:maxLength', $maxLength);
+    $datatype->setAttribute('rs:precision', '0');
+
+    $attribute->appendChild($datatype);
+
+    $elementType->appendChild($attribute);
+}
+
+self::addAttribute($dom, $elementType, 'TRM_ID', 'string', 50);
+self::addAttribute($dom, $elementType, 'TRM_USED', 'int', 4);
+self::addAttribute($dom, $elementType, 'TRM_CODE', 'string', 50);
+self::addAttribute($dom, $elementType, 'TRM_INIT', 'string', 50);
+self::addAttribute($dom, $elementType, 'TRM_DESC', 'string', 50);
+self::addAttribute($dom, $elementType, 'TRM_HOST', 'string', 50);
+self::addAttribute($dom, $elementType, 'TRM_PORT', 'int', 4);
+self::addAttribute($dom, $elementType, 'TRM_DB', 'string', 50);
+self::addAttribute($dom, $elementType, 'TRM_USER', 'string', 50);
+self::addAttribute($dom, $elementType, 'TRM_PASS', 'string', 50);
+self::addAttribute($dom, $elementType, 'TRM_STS_PING', 'int', 4);
+self::addAttribute($dom, $elementType, 'TRM_LAST_CHECKED', 'dateTime', 16);
+self::addAttribute($dom, $elementType, 'TRM_LAST_UPDATED', 'dateTime', 16);
