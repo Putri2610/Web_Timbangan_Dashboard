@@ -1,34 +1,57 @@
-public static function generateXml()
+class GenerateXmlController extends Controller
 {
-    $adaPerubahan = CompareServerConfig::where('xml_generated', false)->exists();
+    public function generate()
+    {
+        self::generateXml();
 
-    if (!$adaPerubahan) {
+        return response()->download(
+            storage_path('app/public/current.xml')
+        );
+    }
+
+    public static function generateXml()
+    {
+        // Cek apakah ada perubahan
+        $adaPerubahan = CompareServerConfig::where('xml_generated', false)->exists();
+
+        if (!$adaPerubahan) {
+            return true;
+        }
+
+        // Ambil semua data CompareServerConfig
+        $servers = CompareServerConfig::orderBy('kode_pks')->get();
+
+        $currentPath = storage_path('app/public/current.xml');
+        $previousPath = storage_path('app/public/previous.xml');
+
+        // Simpan current menjadi previous
+        if (file_exists($currentPath)) {
+            copy($currentPath, $previousPath);
+        }
+
+        // Generate current.xml
+        $xml = new \SimpleXMLElement('<servers/>');
+
+        foreach ($servers as $server) {
+
+            $item = $xml->addChild('server');
+
+            $item->addChild('kode_pks', $server->kode_pks);
+            $item->addChild('server_aktif', $server->server_aktif);
+            $item->addChild('jalur', $server->jalur);
+            $item->addChild('ip', $server->ip);
+            $item->addChild('status', $server->status ? 'Online' : 'Offline');
+            $item->addChild('last_checked', $server->last_checked);
+            $item->addChild('last_updated', $server->last_updated);
+        }
+
+        $xml->asXML($currentPath);
+
+        // Tandai semua perubahan sudah digenerate
+        CompareServerConfig::query()->update([
+            'xml_generated' => true
+        ]);
+
         return true;
     }
-
-    $servers = CompareServerConfig::orderBy('kode_pks')->get();
-
-    $xml = new \SimpleXMLElement('<servers/>');
-
-    foreach ($servers as $server) {
-
-        $item = $xml->addChild('server');
-
-        $item->addChild('kode_pks', $server->kode_pks);
-        $item->addChild('server_aktif', $server->server_aktif);
-        $item->addChild('jalur', $server->jalur);
-        $item->addChild('ip', $server->ip);
-        $item->addChild('status', $server->status ? 'Online' : 'Offline');
-        $item->addChild('last_checked', $server->last_checked);
-    }
-
-    $path = storage_path('app/public/server_config.xml');
-
-    $xml->asXML($path);
-
-    CompareServerConfig::query()->update([
-        'xml_generated' => true
-    ]);
-
-    return true;
 }
