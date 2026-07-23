@@ -1,0 +1,50 @@
+$xml = $dom->createElement('xml');
+
+$xml->setAttribute(
+    'xmlns:s',
+    'uuid:BDC6E3F0-6DA3-11d1-A2A3-00AA00C14882'
+);
+
+$xml->setAttribute(
+    'xmlns:dt',
+    'uuid:C2F41010-65B3-11d1-A29F-00AA00C14882'
+);
+
+$xml->setAttribute(
+    'xmlns:rs',
+    'urn:schemas-microsoft-com:rowset'
+);
+
+$xml->setAttribute(
+    'xmlns:z',
+    '#RowsetSchema'
+);
+
+$dom->appendChild($xml);
+
+//schema
+$schema = $dom->createElement('s:Schema');
+$schema->setAttribute('id', 'RowsetSchema');
+
+$xml->appendChild($schema);
+
+//element type
+$elementType = $dom->createElement('s:ElementType');
+
+$elementType->setAttribute('name', 'row');
+$elementType->setAttribute('content', 'eltOnly');
+$elementType->setAttribute('rs:updatable', 'true');
+
+$schema->appendChild($elementType);
+
+//data
+$data = $dom->createElement('rs:data');
+
+$insert = $dom->createElement('rs:insert');
+
+$data->appendChild($insert);
+
+$xml->appendChild($data);
+
+//save
+$dom->save($currentPath);
