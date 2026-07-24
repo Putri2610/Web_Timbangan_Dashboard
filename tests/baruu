@@ -14,3 +14,17 @@ $servers = CompareServerConfig::leftJoin(
 )
 ->orderBy('compare_server_configs.kode_pks')
 ->get();
+
+
+
+<td class="text-muted small">
+    {{ $server->last_checked
+        ? \Carbon\Carbon::parse($server->last_checked)->format('d-m-Y H:i:s')
+        : '-' }}
+</td>
+
+<td class="text-muted small">
+    {{ $server->last_updated
+        ? \Carbon\Carbon::parse($server->last_updated)->format('d-m-Y H:i:s')
+        : '-' }}
+</td>
