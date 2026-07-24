@@ -1,0 +1,16 @@
+$servers = CompareServerConfig::leftJoin(
+    'server_configs',
+    function ($join) {
+        $join->on('compare_server_configs.kode_pks', '=', 'server_configs.kode_pks')
+             ->on('compare_server_configs.server_aktif', '=', 'server_configs.nama_server');
+    }
+)
+->select(
+    'compare_server_configs.*',
+    'server_configs.port',
+    'server_configs.database_name',
+    'server_configs.username',
+    'server_configs.password'
+)
+->orderBy('compare_server_configs.kode_pks')
+->get();
