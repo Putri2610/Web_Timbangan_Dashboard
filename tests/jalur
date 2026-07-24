@@ -1,0 +1,284 @@
+<?php
+namespace App\Http\Controllers;
+use App\Models\ServerConfig;
+use App\Models\ServerHistory;
+use App\Models\CompareServerConfig;
+use App\Http\Controllers\GenerateXmlController;
+class PingController extends Controller
+{
+    public function index()
+    {
+        $listPks = ServerConfig::select('kode_pks')
+        ->distinct()
+        ->orderBy('kode_pks')
+        ->get();
+
+        $aktifServers = [];
+
+        foreach ($listPks as $pks) {
+            $servers = ServerConfig::where('kode_pks', $pks->kode_pks)
+            ->orderBy('id')
+            ->get();
+
+            $config = CompareServerConfig::where('kode_pks', $pks->kode_pks)->first();
+
+            $serverAktif = null;
+            foreach ($servers as $server){
+                if ($server->status_local == 1){
+                $serverAktif = [
+                    'kode_pks'   => $server->kode_pks,
+                    'nama_server' => $server->nama_server,
+                    'ip'    => $server->ip_local,
+                    'jalur' => 'local',
+                    'status'=> 'Online',
+                    'database_name' => $server->database_name,
+                    'username' => $server->username,
+                    'password' => $server->password,
+                    'port' => $server->port,
+                    'last_checked' => $config->last_checked ?? null,
+                    'last_updated' =>$config->last_updated ?? null,
+                    
+                ];
+                break;
+            }
+            if ($server->status_internet == 1) {
+                $serverAktif = [
+                    'kode_pks'   => $server->kode_pks,
+                    'nama_server' => $server->nama_server,
+                    'ip'    => $server->ip_internet,
+                    'jalur' => 'internet',
+                    'status'=> 'Online',
+                    'database_name' => $server->database_name,
+                    'username' => $server->username,
+                    'password' => $server->password,
+                    'port' => $server->port,
+                    'last_checked' => $config->last_checked ?? null,
+                    'last_updated' =>$config->last_updated ?? null,
+                ];
+                break;
+            }
+            }
+            if(!$serverAktif){
+
+            $lastCheck = $servers->max('updated_at');
+
+                $serverAktif = [
+                    'kode_pks' => $pks->kode_pks,
+                    'nama_server' => 'Tidak ada server aktif',
+                    'ip' => '-',
+                    'jalur' => '-',
+                    'status' => 'Offline',
+                    'database_name' => '-',
+                    'username' => '-',
+                    'password' => '-',
+                    'port' => '-',
+                    'last_checked' => $config->last_checked ?? null,
+                    'last_updated' =>$config->last_updated ?? null,
+                ];
+            }
+
+            $aktifServers[] = $serverAktif;
+
+        }
+
+        $serverAktifCount = CompareServerConfig::where('status', 1)->count();
+
+        $xmlPending = CompareServerConfig::where('xml_generated', 1)->count();
+
+        $servers = CompareServerConfig::leftJoin(
+    'server_configs',
+    function ($join) {
+        $join->on('compare_server_configs.kode_pks', '=', 'server_configs.kode_pks')
+             ->on('compare_server_configs.server_aktif', '=', 'server_configs.nama_server');
+    }
+)
+->select(
+    'compare_server_configs.*',
+    'server_configs.port',
+    'server_configs.database_name',
+    'server_configs.username',
+    'server_configs.password'
+)
+->orderBy('compare_server_configs.kode_pks')
+->get();
+
+        return view('ping', compact(
+            'servers',
+            'serverAktifCount',
+            'xmlPending'
+        ));
+    }
+
+    public function checkServers()
+    {
+        $adaPerubahan = false;
+        
+        $pkss = ServerConfig::select('kode_pks')
+        ->distinct()
+        ->get();
+        
+        foreach ($pkss as $pks) {
+            
+        $servers = ServerConfig::where('kode_pks', $pks->kode_pks)
+            ->orderBy('id')
+            ->get();
+
+            echo "Jumlah server {$pks->kode_pks} : ".$servers->count().PHP_EOL;
+
+        $serverAktif = null;
+
+        foreach ($servers as $server) {
+
+        echo "ID : ".$server->id.PHP_EOL;
+        echo "Nama : ".$server->nama_server.PHP_EOL;
+
+            // ========================
+            // Ping Local
+            // ========================
+            $output = [];
+            $status = 1;
+
+            exec("ping -n 1 ".$server->ip_local, $output, $status);
+
+            $hasil = implode(" ", $output);
+
+            $server->status_local = (
+                $status == 0 &&
+                stripos($hasil,"Request timed out")===false &&
+                stripos($hasil,"Destination host unreachable")===false &&
+                stripos($hasil,"Destination net unreachable")===false &&
+                stripos($hasil,"General failure")===false
+                ) ? 1 : 0;
+            // ========================
+            // Ping Internet
+            // ========================
+            $output = [];
+            $status = 1;
+
+            exec("ping -n 1 ".$server->ip_internet, $output, $status);
+
+            $hasil = implode(" ", $output);
+
+            $server->status_internet = (
+                $status == 0 &&
+                stripos($hasil,"Request timed out")===false &&
+                stripos($hasil,"Destination host unreachable")===false &&
+                stripos($hasil,"Destination net unreachable")===false &&
+                stripos($hasil,"General failure")===false
+            ) ? 1 : 0;
+            $server->save();
+
+            // PRIORITAS
+            if ($server->status_local) {
+
+                $serverAktif = [
+                    'kode_pks'=>$server->kode_pks,
+                    'nama_server'=>$server->nama_server,
+                    'jalur'=>'Local',
+                    'ip'=>$server->ip_local,
+                    'status'=>true
+                ];
+
+               // break;
+            }
+
+            if ($server->status_internet) {
+
+                $serverAktif = [
+                    'kode_pks'=>$server->kode_pks,
+                    'nama_server'=>$server->nama_server,
+                    'jalur'=>'Internet',
+                    'ip'=>$server->ip_internet,
+                    'status'=>true
+                ];
+
+                //break;
+            }
+        }
+
+        if(!$serverAktif){
+
+            $serverAktif = [
+                'kode_pks'=>$pks->kode_pks,
+                'nama_server'=>'Tidak ada server aktif',
+                'jalur'=>'-',
+                'ip'=>'-',
+                'status'=>false
+            ];
+        }
+
+        // =====================
+        // HISTORY
+        // =====================
+
+        $last = ServerHistory::where('kode_pks',$pks->kode_pks)
+            ->latest()
+            ->first();
+
+        if(
+            !$last ||
+            $last->nama_server != $serverAktif['nama_server'] ||
+            $last->jalur != $serverAktif['jalur'] ||
+            $last->ip != $serverAktif['ip'] ||
+            $last->status != $serverAktif['status']
+        ){
+
+            $adaPerubahan = true;
+
+            ServerHistory::create([
+                'kode_pks'=>$serverAktif['kode_pks'],
+                'nama_server'=>$serverAktif['nama_server'],
+                'jalur'=>$serverAktif['jalur'],
+                'ip'=>$serverAktif['ip'],
+                'status'=>$serverAktif['status'],
+                'xml_generated'=>false
+            ]);
+        }
+    $config = CompareServerConfig::where('kode_pks', $pks->kode_pks)->first();
+
+    if (!$config) {
+        CompareServerConfig::create(
+            [
+                'kode_pks'=>$pks->kode_pks,
+                'server_aktif'=>$serverAktif['nama_server'],
+                'jalur'=>$serverAktif['jalur'],
+                'ip'=>$serverAktif['ip'],
+                'status'=>$serverAktif['status'],
+                'last_checked'=>now(),
+                'last_updated'=>now(),
+                'xml_generated'=>false
+            ]
+            );
+    } else {
+        $berubah =
+            $config->server_aktif != $serverAktif['nama_server'] ||
+            $config->jalur != $serverAktif['jalur'] ||
+            $config->ip != $serverAktif['ip'] ||
+            $config->status != $serverAktif['status'];
+        
+        $config->server_aktif = $serverAktif['nama_server'];
+        $config->jalur = $serverAktif['jalur'];
+        $config->ip = $serverAktif['ip'];
+        $config->status = $serverAktif['status'];
+
+        $config->last_checked = now();
+
+        if ($berubah) {
+            $config->last_updated = now();
+
+            $config->xml_generated = false;
+        }
+
+        $config->save();
+
+    }
+
+    }
+    if ($adaPerubahan){
+        GenerateXmlController::generateXml();
+    }
+
+    return $adaPerubahan;
+}
+
+}
