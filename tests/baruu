@@ -28,3 +28,11 @@ $servers = CompareServerConfig::leftJoin(
         ? \Carbon\Carbon::parse($server->last_updated)->format('d-m-Y H:i:s')
         : '-' }}
 </td>
+
+
+
+
+Route::get('/ping',[PingController::class,'index']);
+
+Route::post('/generate-xml', [GenerateXmlController::class, 'generate']
+)->name('generate.xml');
